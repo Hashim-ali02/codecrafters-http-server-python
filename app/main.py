@@ -9,8 +9,18 @@ def main():
     connection, address = server_socket.accept()
     # Log the address of the connected client
     print(f"accepted connection from {address}")
-    # Send HTTP 200 OK response to the client
-    connection.sendall(b"HTTP/1.1 200 OK\r\n\r\n")
+
+    # Read the request from the client
+    request = connection.recv(1024)')}")
+    
+    # Check if the request is a GET request for the root path
+    if request.startswith("GET / HTTP/1.1"):
+        response = b"HTTP/1.1 200 OK\r\n\r\n"        
+    else:
+        response = b"HTTP/1.1 404 Not Found\r\n\r\n"
+
+    # Send response to the client
+    connection.sendall(response)
 
 
 if __name__ == "__main__":
