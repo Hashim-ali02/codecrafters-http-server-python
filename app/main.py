@@ -11,7 +11,7 @@ def main():
     print(f"accepted connection from {address}")
 
     # Read the request from the client
-    request = connection.recv(1024)
+    request = connection.recv(1024).decode()
     
     # Check if the request is a GET request for the root path
     if request.startswith("GET / HTTP/1.1"):
