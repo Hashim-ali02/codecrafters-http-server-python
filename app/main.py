@@ -20,7 +20,7 @@ def main():
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
         response = "HTTP/1.1 200 OK\r\n\r\n"
     elif method == "GET" and path.startswith("/echo/"):
-        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(request[6:])}\r\n\r\n{request[6:]}"        
+        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"        
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
