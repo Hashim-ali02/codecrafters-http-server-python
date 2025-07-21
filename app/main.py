@@ -15,14 +15,14 @@ def main():
     
     # Check if the request is a GET request for the root path
     if request.startswith("GET / HTTP/1.1"):
-        response = b"HTTP/1.1 200 OK\r\n\r\n"
+        response = "HTTP/1.1 200 OK\r\n\r\n"
     elif request.startswith("GET /echo/"):
-            return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(request[10:])}\r\n\r\n{request[10:]}"        
+        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(request[10:])}\r\n\r\n{request[10:]}"        
     else:
-        response = b"HTTP/1.1 404 Not Found\r\n\r\n"
+        response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
     # Send response to the client
-    connection.sendall(response)
+    connection.sendall(response.encode())
 
 
 if __name__ == "__main__":
