@@ -13,7 +13,7 @@ def main():
     # Parse the request from the client
     
     data = connection.recv(1024).decode()
-    request, host, user_agent = data.split("\r\n")[0]
+    request, host, user_agent = data.split("\r\n")
     method, path, version = request.split(" ")
 
     # Check if method, path, and version are valid
