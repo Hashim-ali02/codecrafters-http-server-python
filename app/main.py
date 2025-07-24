@@ -25,7 +25,7 @@ def main():
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
-        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent[12:])}\r\n\r\n {user_agent[12:]}"        
+        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent[12:])}\r\n\r\n{user_agent[12:]}"        
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
