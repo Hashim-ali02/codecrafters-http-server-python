@@ -12,7 +12,7 @@ def main():
 
     # Parse the request from the client
     
-    data = connection.recv(1024).decode()
+    data = connection.recv(2048).decode()
     split_data = data.split("\r\n")
     request = split_data[0]
     host = split_data[1]
