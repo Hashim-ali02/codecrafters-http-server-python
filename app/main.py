@@ -38,7 +38,7 @@ def handleconnection(connection, address):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent[12:])}\r\n\r\n{user_agent[12:]}"        
-    elif path.startswith("/files/") and get_file_contents(path) != False:
+    elif path.startswith("/files/") and get_file_contents(path[7:]) != False:
         content = get_file_contents(path[7:])
         response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
     else:
