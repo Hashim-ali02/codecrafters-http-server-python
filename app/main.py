@@ -39,6 +39,7 @@ def handleconnection(connection, address):
     host = split_data[1]
     user_agent = split_data[2]
     method, path, version = request.split(" ")
+    body = data.split("\r\n\r\n")[1]
 
     # Check if method, path, and version are valid
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
@@ -50,8 +51,7 @@ def handleconnection(connection, address):
     elif path.startswith("/files/") and get_file_contents(path[7:]) != False:
         content = get_file_contents(path[7:])
         response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
-    elif method == "POST" and path.startswith("/files/"):
-        body = split_data[5] 
+    elif method == "POST" and path.startswith("/files/"): 
         create_file(path[7:], body)
         response = "HTTP/1.1 201 Created\r\n\r\n"
     else:
