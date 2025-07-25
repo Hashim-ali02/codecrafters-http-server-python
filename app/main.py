@@ -51,7 +51,7 @@ def handleconnection(connection, address):
         content = get_file_contents(path[7:])
         response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
     elif method == "POST" and path.startswith("/files/"):
-        body = split_data[6]
+        body = split_data[5] 
         create_file(path[7:], body)
         response = "HTTP/1.1 201 Created\r\n\r\n"
     else:
