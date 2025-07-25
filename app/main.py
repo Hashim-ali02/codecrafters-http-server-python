@@ -13,6 +13,15 @@ def get_file_contents(path):
     except:
         return False
 
+def create_file(path, content):
+    file_path = sys.argv[2] + path
+    try:
+        with open(file_path, "w") as file:
+            file.write(content)
+        return True
+    except:
+        return False
+
 def start_server():    
     # Create a socket that listens on port 4221
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
@@ -29,6 +38,7 @@ def handleconnection(connection, address):
     request = split_data[0]
     host = split_data[1]
     user_agent = split_data[2]
+    body = split_data[6]
     method, path, version = request.split(" ")
 
     # Check if method, path, and version are valid
@@ -41,6 +51,9 @@ def handleconnection(connection, address):
     elif path.startswith("/files/") and get_file_contents(path[7:]) != False:
         content = get_file_contents(path[7:])
         response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
+    elif method == "POST" and path.startswith("/files/"):
+        create_file(path[7:], body)
+        response = "HTTP/1.1 201 Created\r\n\r\n"
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
