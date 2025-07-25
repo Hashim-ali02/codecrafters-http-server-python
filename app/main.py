@@ -39,7 +39,7 @@ def handleconnection(connection, address):
     elif method == "GET" and path == "/user-agent":
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent[12:])}\r\n\r\n{user_agent[12:]}"        
     elif path.startswith("/files/") and get_file_contents(path) != False:
-        content = get_file_contents(path)
+        content = get_file_contents(path[7:])
         response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
