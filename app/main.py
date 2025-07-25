@@ -1,17 +1,20 @@
-import socket  # noqa: F401
-
+import socket 
+import threading
 
 def main():
+    start_server()
+    
+def start_server():    
     # Create a socket that listens on port 4221
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
-    
-    # Block until we receive an incoming connection
-    connection, address = server_socket.accept()
-    # Log the address of the connected client
-    print(f"accepted connection from {address}")
+    while True:
+        connection, address = server_socket.accept()  
+        thread = threading.Thread(target=handleconnection, args=(connection, address))
+        thread.start()
 
+        
+def handleconnection(connection, address):      
     # Parse the request from the client
-    
     data = connection.recv(2048).decode()
     split_data = data.split("\r\n")
     request = split_data[0]
