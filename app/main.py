@@ -1,9 +1,18 @@
 import socket 
 import threading
+import sys
 
 def main():
     start_server()
     
+def get_file_contents(path):
+    file_path = sys.argv[2] + path
+    try:
+        with open(file_path) as file:
+            return file.read()
+    except:
+        return False
+
 def start_server():    
     # Create a socket that listens on port 4221
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
@@ -29,6 +38,9 @@ def handleconnection(connection, address):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent[12:])}\r\n\r\n{user_agent[12:]}"        
+    elif path.startswith("/files/") and get_file_contents(path) != False:
+        content = get_file_contents(path)
+        response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
