@@ -38,7 +38,7 @@ def encoded_response(encodings, body):
             compressed_body = compress_body(encoding, body)
             headers = f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: {len(compressed_body)}\r\n\r\n"
             return headers.encode() + compressed_body
-    return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
+    return False
         
 def compress_body(encoding, body):
     if encoding == "gzip":
@@ -66,7 +66,11 @@ def handleconnection(connection, address):
     elif method == "GET" and "Accept-Encoding" in parsed_headers and path.startswith("/echo/"):
         parsed_headers["Accept-Encoding"] = parsed_headers["Accept-Encoding"].split(", ")
         response = encoded_response(parsed_headers["Accept-Encoding"], path[6:])
-        connection.sendall(response)
+        if response == False:
+            response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
+            connection.sendall(response.encode())
+        else:
+            connection.sendall(response)
         return
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
