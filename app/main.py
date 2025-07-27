@@ -41,7 +41,7 @@ def encoded_response(encodings, body):
         
 def compress_body(encoding, body):
     if encoding == "gzip":
-        return gzip.compress(body)
+        return gzip.compress(body.encode())
     else:
         return body
     
