@@ -36,7 +36,8 @@ def encoded_response(encodings, body):
     for encoding in encodings:
         if encoding in acceptable_encodings:
             compressed_body = compress_body(encoding, body)
-            return f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: {len(compressed_body)}\r\n\r\n{compressed_body}"
+            headers = f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: {len(compressed_body)}\r\n\r\n"
+            return headers.encode() + compressed_body
     return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
         
 def compress_body(encoding, body):
