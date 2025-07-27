@@ -30,12 +30,12 @@ def start_server():
         thread = threading.Thread(target=handleconnection, args=(connection, address))
         thread.start()
 
-def encoded_response(encoding):
+def encoded_response(encodings):
     acceptable_encodings = ["gzip"]
-    if encoding in acceptable_encodings:
-        return f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: Size of compressed body to be implemented\r\n\r\n"
-    else:
-        return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
+    for encoding in encodings:
+        if encoding in acceptable_encodings:
+            return f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: Size of compressed body to be implemented\r\n\r\n"
+    return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
         
 def handleconnection(connection, address):      
     # Parse the request from the client
@@ -54,6 +54,7 @@ def handleconnection(connection, address):
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
         response = "HTTP/1.1 200 OK\r\n\r\n"
     elif method == "GET" and "Accept-Encoding" in parsed_headers:
+        parsed_headers["Accept-Encoding"] = parsed_headers["Accept-Encoding"].split(", ")
         response = encoded_response(parsed_headers["Accept-Encoding"])
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
