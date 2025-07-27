@@ -66,6 +66,8 @@ def handleconnection(connection, address):
     elif method == "GET" and "Accept-Encoding" in parsed_headers:
         parsed_headers["Accept-Encoding"] = parsed_headers["Accept-Encoding"].split(", ")
         response = encoded_response(parsed_headers["Accept-Encoding"], body)
+        connection.sendall(response)
+        return
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
