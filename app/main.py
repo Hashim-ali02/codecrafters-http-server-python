@@ -45,10 +45,12 @@ def handleconnection(connection, address):
     for header in headers:
         key, value = header.split(": ")
         parsed_headers[key] = value
-    
+
     # Check if method, path, and version are valid
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
         response = "HTTP/1.1 200 OK\r\n\r\n"
+    elif method == "GET" and "Accept-Encoding" in parsed_headers:
+        response = f"HTTP/1.1 200 OK\r\nContent-Encoding: {parsed_headers["Accept-Encoding"]}\r\nContent-Type: text/plain\r\nContent-Length: Size of compressed body to be implemented\r\n\r\n"
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
