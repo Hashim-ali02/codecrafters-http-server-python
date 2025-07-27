@@ -34,13 +34,18 @@ def start_server():
 def handleconnection(connection, address):      
     # Parse the request from the client
     data = connection.recv(2048).decode()
-    split_data = data.split("\r\n")
-    request = split_data[0]
-    host = split_data[1]
-    user_agent = split_data[2]
+    request_data, body = data.split("\r\n\r\n")
+    request = request_data.split("\r\n")[0]
+    headers = request_data.split("\r\n")[1:]
     method, path, version = request.split(" ")
-    body = data.split("\r\n\r\n")[1]
+    host = headers[1]
+    user_agent = headers[2]
 
+    parsed_headers = {}
+    for header in headers:
+        key, value = header.split(": ")
+        parsed_headers[key] = value
+    
     # Check if method, path, and version are valid
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
         response = "HTTP/1.1 200 OK\r\n\r\n"
