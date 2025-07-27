@@ -38,8 +38,6 @@ def handleconnection(connection, address):
     request = request_data.split("\r\n")[0]
     headers = request_data.split("\r\n")[1:]
     method, path, version = request.split(" ")
-    host = headers[1]
-    user_agent = headers[2]
 
     parsed_headers = {}
     for header in headers:
@@ -54,7 +52,7 @@ def handleconnection(connection, address):
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
-        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent[12:])}\r\n\r\n{user_agent[12:]}"        
+        response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(parsed_headers["User-Agent"])}\r\n\r\n{parsed_headers["User-Agent"]}"        
     elif path.startswith("/files/") and get_file_contents(path[7:]) != False:
         content = get_file_contents(path[7:])
         response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(content)}\r\n\r\n{content}"
