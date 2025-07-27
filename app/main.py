@@ -33,7 +33,7 @@ def start_server():
 def encoded_response(encoding):
     acceptable_encodings = ["gzip"]
     if encoding in acceptable_encodings:
-        return f"HTTP/1.1 200 OK\r\nContent-Encoding: {parsed_headers["Accept-Encoding"]}\r\nContent-Type: text/plain\r\nContent-Length: Size of compressed body to be implemented\r\n\r\n"
+        return f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: Size of compressed body to be implemented\r\n\r\n"
     else:
         return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
         
