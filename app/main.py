@@ -63,9 +63,9 @@ def handleconnection(connection, address):
     # Check if method, path, and version are valid
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
         response = "HTTP/1.1 200 OK\r\n\r\n"
-    elif method == "GET" and "Accept-Encoding" in parsed_headers:
+    elif method == "GET" and "Accept-Encoding" in parsed_headers and path.startswith("/echo/"):
         parsed_headers["Accept-Encoding"] = parsed_headers["Accept-Encoding"].split(", ")
-        response = encoded_response(parsed_headers["Accept-Encoding"], body)
+        response = encoded_response(parsed_headers["Accept-Encoding"], path[6:])
         connection.sendall(response)
         return
     elif method == "GET" and path.startswith("/echo/"):
