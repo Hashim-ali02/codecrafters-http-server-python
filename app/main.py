@@ -1,6 +1,7 @@
 import socket 
 import threading
 import sys
+import gzip
 
 def main():
     start_server()
@@ -30,13 +31,21 @@ def start_server():
         thread = threading.Thread(target=handleconnection, args=(connection, address))
         thread.start()
 
-def encoded_response(encodings):
+def encoded_response(encodings, body):
     acceptable_encodings = ["gzip"]
     for encoding in encodings:
         if encoding in acceptable_encodings:
-            return f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: Size of compressed body to be implemented\r\n\r\n"
+            compressed_body = compress_body(encoding, body)
+            return f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: text/plain\r\nContent-Length: {len(compressed_body)}\r\n\r\n{compressed_body}"
     return f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"
         
+def compress_body(encoding, body):
+    if encoding == "gzip":
+        return gzip.compress(body)
+    else:
+        return body
+    
+
 def handleconnection(connection, address):      
     # Parse the request from the client
     data = connection.recv(2048).decode()
@@ -55,7 +64,7 @@ def handleconnection(connection, address):
         response = "HTTP/1.1 200 OK\r\n\r\n"
     elif method == "GET" and "Accept-Encoding" in parsed_headers:
         parsed_headers["Accept-Encoding"] = parsed_headers["Accept-Encoding"].split(", ")
-        response = encoded_response(parsed_headers["Accept-Encoding"])
+        response = encoded_response(parsed_headers["Accept-Encoding"], body)
     elif method == "GET" and path.startswith("/echo/"):
         response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(path[6:])}\r\n\r\n{path[6:]}"
     elif method == "GET" and path == "/user-agent":
