@@ -60,7 +60,6 @@ def handleconnection(connection, address):
         key, value = header.split(": ")
         parsed_headers[key] = value
 
-    # Check if method, path, and version are valid
     if method == "GET" and path == "/" and version == "HTTP/1.1": 
         response = "HTTP/1.1 200 OK\r\n\r\n"
     elif method == "GET" and "Accept-Encoding" in parsed_headers and path.startswith("/echo/"):
@@ -85,7 +84,6 @@ def handleconnection(connection, address):
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
-    # Send response to the client
     connection.sendall(response.encode())
 
 
